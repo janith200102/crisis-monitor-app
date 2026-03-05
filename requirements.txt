@@ -1,0 +1,13 @@
+streamlit
+yfinance
+pandas
+plotly
+feedparser
+beautifulsoup4
+requests
+streamlit-autorefresh
+groq
+huggingface_hub
+Pillow
+folium
+streamlit-folium
