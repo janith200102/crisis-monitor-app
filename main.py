@@ -61,47 +61,37 @@ def on_page_change():
 st_autorefresh(interval=300000, limit=None, key="global_autorefresh")
 
 # ─────────────────────────────────────────────────────────────
-# 100% PERFECT CSS: HIDE STREAMLIT UI + KEEP MOBILE MENU + CUSTOM STYLES
+# CLEAN CSS: HIDE BRANDING, KEEP MENU, FIX KEYBOARD TEXT
 # ─────────────────────────────────────────────────────────────
 st.markdown("""
     <style>
-    /* 1. Keep Mobile Menu (Header) visible but transparent */
-    [data-testid="stHeader"] {
-        background-color: transparent !important;
-        /* No height: 0px here, so the menu icon stays visible! */
-    }
-
-    /* 2. Hide Top Right Icons, MainMenu & Deploy Button */
-    [data-testid="stToolbar"], #MainMenu, .stAppDeployButton, [data-testid="stAppDeployButton"] {
+    /* 1. HIDE TOP RIGHT ICONS & DEPLOY BUTTON */
+    [data-testid="stToolbar"], .stAppDeployButton {
         display: none !important;
         visibility: hidden !important;
     }
 
-    /* 3. Hide the Bottom Right Creator Badge & Status Widget */
+    /* 2. HIDE BOTTOM RIGHT CREATOR BADGE & STATUS WIDGET */
+    #st-creator-badge, 
     [data-testid="stCreatorProfilePreview"], 
-    div[class*="viewerBadge"], 
     [data-testid="stStatusWidget"], 
-    .stStatusWidget,
-    iframe[title="Streamlit Badge"],
-    iframe[src*="badge"] {
+    div[class^="viewerBadge"] {
         display: none !important;
         visibility: hidden !important;
         opacity: 0 !important;
+        pointer-events: none !important;
     }
 
-    /* 4. Hide the Default Footer */
-    footer {
-        display: none !important;
-        visibility: hidden !important;
+    /* 3. HIDE FOOTER */
+    footer { display: none !important; }
+
+    /* 4. KEEP HEADER TRANSPARENT (Crucial for Mobile Menu to Work) */
+    [data-testid="stHeader"] { 
+        background: transparent !important; 
+        box-shadow: none !important;
     }
 
-    /* 5. Clean Padding for the main content */
-    .block-container {
-        padding-top: 2rem !important;
-        padding-bottom: 0rem !important;
-    }
-    
-    /* --- ROYAL BLUE COMPACT SIDEBAR CARDS (Your Custom Design) --- */
+    /* 5. ROYAL BLUE SIDEBAR CARDS (Your Custom Design) */
     [data-testid="stSidebar"] div[role="radiogroup"] > label {
         background: linear-gradient(145deg, #4169E1, #1D4ED8) !important;
         border: 1px solid #1e3a8a !important;
@@ -112,53 +102,18 @@ st.markdown("""
         transition: all 0.2s ease-in-out !important;
         width: 100% !important;
     }
-    [data-testid="stSidebar"] div[role="radiogroup"] > label:hover {
-        background: linear-gradient(145deg, #3B82F6, #2563EB) !important;
-        border-color: #60A5FA !important;
-        transform: scale(0.98) !important; 
-        box-shadow: 0 2px 4px rgba(29, 78, 216, 0.4) !important;
-    }
     [data-testid="stSidebar"] div[role="radiogroup"] p {
-        font-size: 14px !important; 
-        font-weight: 600 !important;
         color: #ffffff !important;
-        margin: 0 !important;
-        display: flex !important;
-        align-items: center !important;
-        gap: 8px !important;
+        font-weight: 600 !important;
     }
 
-    /* --- 100% MOBILE RESPONSIVENESS FIXES (Screens under 768px) --- */
-    @media (max-width: 768px) {
-        html, body, [class*="stApp"] {
-            overflow-x: hidden !important;
-            max-width: 100vw !important;
-        }
-        .block-container {
-            padding-left: 1rem !important;
-            padding-right: 1rem !important;
-            padding-top: 3.5rem !important; /* Proper space for the mobile menu to sit */
-            max-width: 100vw !important;
-            overflow-x: hidden !important;
-        }
-        div[style*="display: flex"] { flex-wrap: wrap !important; }
-        h1 { font-size: 1.8rem !important; }
-        h3 { font-size: 1.3rem !important; }
-        .social-container { gap: 20px !important; flex-wrap: wrap !important; }
-        .social-icon { font-size: 35px !important; }
-        .how-card { padding: 1rem !important; margin-bottom: 0.8rem !important; width: 100% !important; box-sizing: border-box !important; }
-        .static-footer { padding: 25px 10px 15px 10px !important; margin-top: 30px !important; }
-        .footer-socials { gap: 15px !important; }
-        .social-btn { font-size: 22px !important; }
-        div[style*="position: absolute"] { max-width: 100% !important; }
+    /* 6. FIX SPACING FOR MOBILE & DESKTOP */
+    .block-container {
+        padding-top: 3rem !important; 
     }
 
-    /* --- HIDE LEAFLET/FOLIUM MAP ATTRIBUTION --- */
-    .leaflet-control-attribution {
-        display: none !important;
-        visibility: hidden !important;
-        opacity: 0 !important;
-    }
+    /* 7. HIDE MAP ATTRIBUTION */
+    .leaflet-control-attribution { display: none !important; }
     </style>
 """, unsafe_allow_html=True)
 # ─────────────────────────────────────────────────────────────
@@ -2381,4 +2336,5 @@ st.markdown("""
     </div>
 </div>
 """, unsafe_allow_html=True)
+
 
