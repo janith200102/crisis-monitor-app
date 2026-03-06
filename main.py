@@ -59,61 +59,64 @@ def on_page_change():
 
 # Auto-refresh every 5 minutes (300000 ms)
 st_autorefresh(interval=300000, limit=None, key="global_autorefresh")
-# --- AGGRESSIVE PREMIUM UI FIX (100% FORCEFUL) ---
+# --- THE ULTIMATE AGGRESSIVE UI FIX (STRICTLY FOR RENDER) ---
 st.markdown("""
     <style>
-    /* 1. FORCE HIDE: Three Dots Menu, Toolbar, and Deploy Button */
+    /* 1. HIDE ALL TOP TOOLS: Dots, Fork, and Toolbar */
     #MainMenu, [data-testid="stToolbar"], .stAppDeployButton {
         display: none !important;
         visibility: hidden !important;
     }
 
-    /* 2. KILL THE "keyboard_double_arrow" TEXT: Hide the text and force a clean icon */
+    /* 2. FIX SIDEBAR ARROW: Kill 'keyboard_double_arrow' text and force clean icon */
     [data-testid="collapsedControl"] span, 
     [data-testid="stSidebarCollapsedControl"] span {
-        font-size: 0px !important;
-        color: transparent !important;
-        display: none !important;
+        display: none !important; /* Forcefully hides the text */
     }
     [data-testid="collapsedControl"]::before, 
     [data-testid="stSidebarCollapsedControl"]::before {
-        content: "〉" !important; /* Force a simple clean arrow */
+        content: "〉" !important; /* Injects a clean arrow symbol */
         font-size: 24px !important;
         color: #4169E1 !important;
         font-weight: bold !important;
-        visibility: visible !important;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
     }
 
-    /* 3. ROYAL BLUE SIDEBAR CARDS: Turn tabs into premium cards */
+    /* 3. ROYAL BLUE CARDS: Transform sidebar items into premium cards */
     [data-testid="stSidebarNav"] li {
         background-color: #4169E1 !important; /* Royal Blue */
-        border-radius: 12px !important;
-        margin: 10px 15px !important;
-        padding: 8px !important;
-        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2) !important;
-        transition: transform 0.2s ease !important;
+        border-radius: 15px !important;
+        margin: 12px 18px !important;
+        padding: 10px !important;
+        box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.25) !important;
+        transition: all 0.3s ease-in-out !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
     }
     [data-testid="stSidebarNav"] li:hover {
-        background-color: #2b4eb3 !important; /* Darker blue on hover */
-        transform: scale(1.03) !important;
+        background-color: #2b4eb3 !important;
+        transform: translateY(-3px) scale(1.02) !important;
     }
     
-    /* Force text inside cards to be White and Bold */
+    /* Change text and icons inside cards to White and Bold */
     [data-testid="stSidebarNav"] li span {
         color: white !important;
-        font-weight: 700 !important;
-        font-size: 16px !important;
+        font-weight: 800 !important;
+        font-size: 15px !important;
     }
 
-    /* 4. CLEAN UP: Hide footer and all viewer badges */
+    /* 4. FORCE MOBILE VISIBILITY: Ensure the button stays on top */
+    [data-testid="stSidebarCollapsedControl"] {
+        z-index: 999999 !important;
+        top: 15px !important;
+        left: 15px !important;
+    }
+
+    /* 5. CLEANUP: Hide footer and Streamlit status widgets */
     footer {display: none !important;}
     [data-testid="stStatusWidget"], .viewerBadge_container__1QSob {
         display: none !important;
-    }
-
-    /* 5. FIX MOBILE VIEW: Ensure the sidebar toggle is always on top */
-    [data-testid="stSidebarCollapsedControl"] {
-        z-index: 999999 !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -2337,6 +2340,7 @@ st.markdown("""
     </div>
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
