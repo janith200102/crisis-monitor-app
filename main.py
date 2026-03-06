@@ -60,25 +60,6 @@ def on_page_change():
 # Auto-refresh every 5 minutes (300000 ms)
 st_autorefresh(interval=300000, limit=None, key="global_autorefresh")
 
-# --- MINIMAL CSS FIX (100% WORKING) ---
-st.markdown("""
-    <style>
-    /* 1. Hide only the top-right icons (GitHub, Star, etc.) and Fork Button */
-    [data-testid="stToolbar"] {visibility: hidden !important;}
-    .stAppDeployButton {display: none !important;}
-    #MainMenu {visibility: hidden !important;}
-
-    /* 2. Completely hide the bottom-right Creator Profile (Avatar + Red badge) */
-    [data-testid="stCreatorProfilePreview"] {display: none !important;}
-    
-    /* 3. Completely hide the mobile 'Hosted with Streamlit' badge */
-    [data-testid="stStatusWidget"] {display: none !important;}
-    .viewerBadge_container__1QSob {display: none !important;}
-    
-    /* 4. Hide the default 'Made with Streamlit' footer */
-    footer {display: none !important;}
-    </style>
-""", unsafe_allow_html=True)
 # ─────────────────────────────────────────────────────────────
 # GROQ + HUGGING FACE SETUP
 # ─────────────────────────────────────────────────────────────
@@ -2299,6 +2280,7 @@ st.markdown("""
     </div>
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
