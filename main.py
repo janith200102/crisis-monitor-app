@@ -59,7 +59,28 @@ def on_page_change():
 
 # Auto-refresh every 5 minutes (300000 ms)
 st_autorefresh(interval=300000, limit=None, key="global_autorefresh")
+# --- CLEAN PREMIUM UI (NO LOGOS, NO MENU, JUST SIDEBAR) ---
+st.markdown("""
+    <style>
+    /* 1. Hide the top-right three dots menu (MainMenu) and toolbar */
+    #MainMenu {visibility: hidden !important;}
+    [data-testid="stToolbar"] {visibility: hidden !important;}
+    .stAppDeployButton {display: none !important;}
 
+    /* 2. Hide the 'Made with Streamlit' footer at the bottom */
+    footer {display: none !important;}
+
+    /* 3. Ensure the Sidebar toggle (arrow) is clean and visible */
+    [data-testid="stSidebarNav"] {padding-top: 2rem;}
+
+    /* 4. Hide the 'Manage App' button (just in case it shows) */
+    [data-testid="stManageApp"] {display: none !important;}
+    
+    /* 5. Hide the red status widget/badge completely */
+    [data-testid="stStatusWidget"] {display: none !important;}
+    .viewerBadge_container__1QSob {display: none !important;}
+    </style>
+""", unsafe_allow_html=True)
 # ─────────────────────────────────────────────────────────────
 # GROQ + HUGGING FACE SETUP
 # ─────────────────────────────────────────────────────────────
@@ -2280,6 +2301,7 @@ st.markdown("""
     </div>
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
