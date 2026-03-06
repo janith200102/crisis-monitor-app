@@ -59,26 +59,59 @@ def on_page_change():
 
 # Auto-refresh every 5 minutes (300000 ms)
 st_autorefresh(interval=300000, limit=None, key="global_autorefresh")
-# --- CLEAN PREMIUM UI (NO LOGOS, NO MENU, JUST SIDEBAR) ---
+# --- ULTIMATE UI FIX FOR RENDER (v1.55.0) ---
 st.markdown("""
     <style>
-    /* 1. Hide the top-right three dots menu (MainMenu) and toolbar */
-    #MainMenu {visibility: hidden !important;}
-    [data-testid="stToolbar"] {visibility: hidden !important;}
-    .stAppDeployButton {display: none !important;}
+    /* 1. Hide the top-right three dots menu and toolbar completely */
+    #MainMenu, [data-testid="stToolbar"], .stAppDeployButton {
+        display: none !important;
+        visibility: hidden !important;
+    }
 
-    /* 2. Hide the 'Made with Streamlit' footer at the bottom */
-    footer {display: none !important;}
+    /* 2. Fix the "keyboard_double_arrow" text issue by hiding the text and keeping the button functional */
+    [data-testid="collapsedControl"] span, [data-testid="stSidebarCollapsedControl"] span {
+        font-size: 0px !important;
+    }
+    [data-testid="collapsedControl"]::before, [data-testid="stSidebarCollapsedControl"]::before {
+        content: "〉" !important; /* Custom clean arrow icon */
+        font-size: 20px !important;
+        color: #4169E1 !important;
+        font-weight: bold;
+    }
 
-    /* 3. Ensure the Sidebar toggle (arrow) is clean and visible */
-    [data-testid="stSidebarNav"] {padding-top: 2rem;}
-
-    /* 4. Hide the 'Manage App' button (just in case it shows) */
-    [data-testid="stManageApp"] {display: none !important;}
+    /* 3. Style Sidebar Navigation as Royal Blue Cards */
+    [data-testid="stSidebarNav"] ul {
+        padding-top: 2rem;
+    }
+    [data-testid="stSidebarNav"] li {
+        background-color: #4169E1 !important; /* Royal Blue */
+        border-radius: 12px !important;
+        margin: 8px 12px !important;
+        padding: 4px !important;
+        transition: transform 0.2s ease;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    [data-testid="stSidebarNav"] li:hover {
+        transform: scale(1.02);
+        background-color: #2b4eb3 !important; /* Darker Royal Blue on hover */
+    }
     
-    /* 5. Hide the red status widget/badge completely */
-    [data-testid="stStatusWidget"] {display: none !important;}
-    .viewerBadge_container__1QSob {display: none !important;}
+    /* Change text and icon color to White inside cards */
+    [data-testid="stSidebarNav"] li span {
+        color: white !important;
+        font-weight: 500 !important;
+    }
+
+    /* 4. Hide all Streamlit branding, footers, and badges */
+    footer {display: none !important;}
+    [data-testid="stStatusWidget"], .viewerBadge_container__1QSob {
+        display: none !important;
+    }
+
+    /* 5. Adjust page padding for a cleaner look */
+    .block-container {
+        padding-top: 1.5rem !important;
+    }
     </style>
 """, unsafe_allow_html=True)
 # ─────────────────────────────────────────────────────────────
@@ -2301,6 +2334,7 @@ st.markdown("""
     </div>
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
