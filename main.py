@@ -269,8 +269,57 @@ st.markdown("""
             visibility: hidden !important;
             opacity: 0 !important;
         }
+
     </style>
 
+""", unsafe_allow_html=True)
+
+# --- ULTIMATE CSS TO HIDE ALL STREAMLIT BRANDING & FORK BUTTON ---
+st.markdown("""
+    <style>
+    /* 1. Hide the specific Fork/Deploy App button and GitHub icon */
+    .stAppDeployButton {
+        display: none !important;
+        visibility: hidden !important;
+    }
+    
+    /* 2. Hide the entire top header and toolbar */
+    [data-testid="stHeader"] {
+        display: none !important;
+        visibility: hidden !important;
+    }
+    [data-testid="stToolbar"] {
+        display: none !important;
+        visibility: hidden !important;
+    }
+    #MainMenu {
+        display: none !important;
+        visibility: hidden !important;
+    }
+
+    /* 3. Hide the mobile "Hosted with Streamlit" red badge */
+    [data-testid="stStatusWidget"] {
+        display: none !important;
+        visibility: hidden !important;
+    }
+
+    /* 4. Hide the default footer */
+    footer {
+        display: none !important;
+        visibility: hidden !important;
+    }
+
+    /* 5. Extra safety for viewer badges */
+    .viewerBadge_container__1QSob {
+        display: none !important;
+    }
+    
+    /* Adjust padding for a cleaner look */
+    .block-container {
+        padding-top: 1rem !important;
+        padding-bottom: 0rem !important;
+    }
+    </style>
 """, unsafe_allow_html=True)
 # ─────────────────────────────────────────────────────────────
 # GROQ + HUGGING FACE SETUP
@@ -663,7 +712,10 @@ def fetch_rss_news():
         """Fetch and parse a single RSS feed, returning a list of article dicts."""
         results = []
         try:
-            feed = feedparser.parse(url)
+            # Force a 4-second timeout on the network request
+            response = requests.get(url, timeout=4)
+            response.raise_for_status()
+            feed = feedparser.parse(response.content)
             for entry in feed.entries[:8]:
                 pub_dt = parse_published_date(entry)
                 if pub_dt is None or pub_dt < cutoff:
@@ -691,13 +743,14 @@ def fetch_rss_news():
                     "published_dt": pub_dt,
                     "image": image_url,
                 })
-        except Exception:
-            pass
+        except Exception as e:
+            print(f"Warning: Failed to fetch {source_name} feed ({url}): {e}")
+            return []
         return results
 
     # Fetch all feeds concurrently
     articles = []
-    with concurrent.futures.ThreadPoolExecutor(max_workers=15) as executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
         future_to_source = {
             executor.submit(_fetch_single_feed, name, url): name
             for name, url in feeds
@@ -705,8 +758,8 @@ def fetch_rss_news():
         for future in concurrent.futures.as_completed(future_to_source):
             try:
                 articles.extend(future.result())
-            except Exception:
-                pass
+            except Exception as e:
+                print(f"Warning: Exception processing feed result: {e}")
 
     # Sort newest first
     articles.sort(key=lambda a: a["published_dt"], reverse=True)
@@ -725,7 +778,10 @@ def fetch_cyber_news():
     def _fetch_single_feed(source_name, url):
         results = []
         try:
-            feed = feedparser.parse(url)
+            # Force a 5-second timeout on the network request
+            response = requests.get(url, timeout=5)
+            response.raise_for_status()
+            feed = feedparser.parse(response.content)
             for entry in feed.entries[:10]:
                 pub_dt = parse_published_date(entry)
                 if pub_dt is None or pub_dt < cutoff:
@@ -2249,25 +2305,19 @@ elif page == "💻 Cyber Threat Monitor":
 # ═════════════════════════════════════════════════════════════
 elif page == "📞 Contact Me":
 
-    # ── Load profile image as base64 ──
-    import os as _os
-    _profile_b64 = ""
-    _mime = "image/jpeg"
-    # Try jpg first (user's uploaded photo)
-    _profile_path_jpg = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "profile.jpg")
-    if _os.path.exists(_profile_path_jpg):
-        with open(_profile_path_jpg, "rb") as _f:
-            _profile_b64 = base64.b64encode(_f.read()).decode()
-        _mime = "image/jpeg"
-    # Fallback to png
-    if not _profile_b64:
-        _profile_path_png = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "profile.png")
-        if _os.path.exists(_profile_path_png):
-            with open(_profile_path_png, "rb") as _f:
-                _profile_b64 = base64.b64encode(_f.read()).decode()
-            _mime = "image/png"
+# ── Load profile image as base64 ──
+    import os
+    import base64
 
-    _avatar_src = f"data:{_mime};base64,{_profile_b64}" if _profile_b64 else "https://api.dicebear.com/8.x/avataaars/svg?seed=ThinkWithJk&backgroundColor=b6e3f4&radius=50"
+    _profile_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "profile.jpg")
+
+    if os.path.exists(_profile_path):
+        with open(_profile_path, "rb") as _f:
+            _profile_b64 = base64.b64encode(_f.read()).decode()
+        _avatar_src = f"data:image/jpeg;base64,{_profile_b64}"
+    else:
+        # Show cartoon face if the file is not on the server
+        _avatar_src = "https://api.dicebear.com/8.x/avataaars/svg?seed=ThinkWithJk&backgroundColor=b6e3f4&radius=50"
 
     # ── Page-Specific CSS ──
     st.markdown("""
