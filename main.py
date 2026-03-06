@@ -2310,7 +2310,7 @@ elif page == "📞 Contact Me":
     import base64
 
     _profile_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "profile.jpg")
-
+st.write(f"Searching for image at: {_profile_path}")
     if os.path.exists(_profile_path):
         with open(_profile_path, "rb") as _f:
             _profile_b64 = base64.b64encode(_f.read()).decode()
