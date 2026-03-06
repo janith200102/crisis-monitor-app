@@ -59,82 +59,61 @@ def on_page_change():
 
 # Auto-refresh every 5 minutes (300000 ms)
 st_autorefresh(interval=300000, limit=None, key="global_autorefresh")
-# --- FINAL AGGRESSIVE CSS FOR RENDER (v1.55.0) ---
+# --- AGGRESSIVE PREMIUM UI FIX (100% FORCEFUL) ---
 st.markdown("""
     <style>
-    /* 1. FORCE HIDE: Three Dots, Share, GitHub, and Manage App button */
-    [data-testid="stHeader"] [data-testid="stToolbar"], 
-    #MainMenu, .stAppDeployButton, [data-testid="stManageApp"] {
+    /* 1. FORCE HIDE: Three Dots Menu, Toolbar, and Deploy Button */
+    #MainMenu, [data-testid="stToolbar"], .stAppDeployButton {
         display: none !important;
         visibility: hidden !important;
     }
 
-    /* 2. FIX HEADER: Make it invisible but KEEP the height so sidebar buttons work on Mobile */
-    [data-testid="stHeader"] {
-        background-color: transparent !important;
-        color: transparent !important;
-    }
-
-    /* 3. FIX SIDEBAR TOGGLE: Kill 'keyboard_double_arrow' text and add a clean icon */
+    /* 2. KILL THE "keyboard_double_arrow" TEXT: Hide the text and force a clean icon */
     [data-testid="collapsedControl"] span, 
     [data-testid="stSidebarCollapsedControl"] span {
-        display: none !important; /* This kills the annoying text */
+        font-size: 0px !important;
+        color: transparent !important;
+        display: none !important;
     }
     [data-testid="collapsedControl"]::before, 
     [data-testid="stSidebarCollapsedControl"]::before {
-        content: "☰" !important; /* Force a standard menu icon */
-        font-size: 26px !important;
+        content: "〉" !important; /* Force a simple clean arrow */
+        font-size: 24px !important;
         color: #4169E1 !important;
+        font-weight: bold !important;
         visibility: visible !important;
-        display: flex !important;
-        padding-left: 10px;
-        cursor: pointer;
     }
 
-    /* 4. ROYAL BLUE CARDS: Transform sidebar navigation tabs into cards */
-    [data-testid="stSidebarNav"] ul {
-        padding-top: 2rem !important;
-    }
+    /* 3. ROYAL BLUE SIDEBAR CARDS: Turn tabs into premium cards */
     [data-testid="stSidebarNav"] li {
         background-color: #4169E1 !important; /* Royal Blue */
         border-radius: 12px !important;
         margin: 10px 15px !important;
-        padding: 5px !important;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+        padding: 8px !important;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2) !important;
+        transition: transform 0.2s ease !important;
     }
     [data-testid="stSidebarNav"] li:hover {
-        background-color: #2b4eb3 !important; /* Darker Blue on hover */
-        transform: translateY(-2px);
+        background-color: #2b4eb3 !important; /* Darker blue on hover */
+        transform: scale(1.03) !important;
     }
     
-    /* Change text and icons inside sidebar cards to White */
-    [data-testid="stSidebarNav"] li span, 
-    [data-testid="stSidebarNav"] li i {
+    /* Force text inside cards to be White and Bold */
+    [data-testid="stSidebarNav"] li span {
         color: white !important;
-        font-weight: bold !important;
+        font-weight: 700 !important;
+        font-size: 16px !important;
     }
 
-    /* 5. HIDE FOOTERS & BADGES: Clean background */
+    /* 4. CLEAN UP: Hide footer and all viewer badges */
     footer {display: none !important;}
     [data-testid="stStatusWidget"], .viewerBadge_container__1QSob {
         display: none !important;
     }
 
-    /* 6. MOBILE OVERRIDE: Ensure Sidebar button is always clickable */
-    @media (max-width: 768px) {
-        [data-testid="stSidebarCollapsedControl"] {
-            background-color: white !important;
-            border-radius: 50% !important;
-            box-shadow: 0px 2px 10px rgba(0,0,0,0.3) !important;
-            width: 45px !important;
-            height: 45px !important;
-            top: 10px !important;
-            left: 10px !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-        }
+    /* 5. FIX MOBILE VIEW: Ensure the sidebar toggle is always on top */
+    [data-testid="stSidebarCollapsedControl"] {
+        z-index: 999999 !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -2358,6 +2337,7 @@ st.markdown("""
     </div>
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
