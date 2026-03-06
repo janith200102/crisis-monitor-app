@@ -61,263 +61,103 @@ def on_page_change():
 st_autorefresh(interval=300000, limit=None, key="global_autorefresh")
 
 # ─────────────────────────────────────────────────────────────
-# HIDE DEFAULT STREAMLIT UI + AGGRESSIVE TOP PADDING FIX (global — all pages)
+# 100% PERFECT CSS: HIDE STREAMLIT UI + KEEP MOBILE MENU + CUSTOM STYLES
 # ─────────────────────────────────────────────────────────────
 st.markdown("""
     <style>
-        #MainMenu {visibility: hidden !important;}
-        .stDeployButton {display: none !important;}
-        footer {visibility: hidden !important;}
-        
-        /* Make header transparent so it looks clean, but DOM remains active for the toggle */
-        header[data-testid="stHeader"] {
-            background-color: transparent !important;
-        }
-        
-        /* Safely force the open/close button's visibility */
-        [data-testid="collapsedControl"] {
-            display: flex !important;
-            visibility: visible !important;
-            opacity: 1 !important;
-            z-index: 999999 !important;
-        }
-
-        /* 1. Nuke inner Streamlit SVGs/Text completely */
-        [data-testid="collapsedControl"] > svg,
-        [data-testid="collapsedControl"] > div,
-        [data-testid="collapsedControl"] > span,
-        [data-testid="stSidebarHeader"] button > svg,
-        [data-testid="stSidebarHeader"] button > div,
-        [data-testid="stSidebarHeader"] button > span {
-            display: none !important;
-        }
-
-        /* 2. Base Button Styles */
-        [data-testid="collapsedControl"], 
-        [data-testid="stSidebarHeader"] button {
-            color: transparent !important;
-            position: relative !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-        }
-
-        /* 3. Open Sidebar Arrow (Right Arrow built with CSS Borders - No Fonts!) */
-        [data-testid="collapsedControl"]::after {
-            content: "" !important;
-            width: 10px !important;
-            height: 10px !important;
-            border-top: 3px solid #2d3748 !important;
-            border-right: 3px solid #2d3748 !important;
-            transform: rotate(45deg) !important;
-            position: absolute !important;
-            transition: border-color 0.3s ease !important;
-        }
-        [data-testid="collapsedControl"]:hover::after {
-            border-color: #ff4b4b !important;
-        }
-
-        /* 4. Close Sidebar Arrow (Left Arrow built with CSS Borders - No Fonts!) */
-        [data-testid="stSidebarHeader"] button::after {
-            content: "" !important;
-            width: 10px !important;
-            height: 10px !important;
-            border-top: 3px solid #2d3748 !important;
-            border-left: 3px solid #2d3748 !important;
-            transform: rotate(-45deg) !important;
-            position: absolute !important;
-            transition: border-color 0.3s ease !important;
-        }
-        [data-testid="stSidebarHeader"] button:hover::after {
-            border-color: #ff4b4b !important;
-        }
-
-        /* ── Aggressively hide Deploy & Status widgets ── */
-        [data-testid="stAppDeployButton"], .stAppDeployButton {
-            display: none !important;
-            visibility: hidden !important;
-            opacity: 0 !important;
-        }
-        [data-testid="stStatusWidget"], .stStatusWidget {
-            display: none !important;
-            visibility: hidden !important;
-        }
-
-        /* --- ROYAL BLUE COMPACT SIDEBAR CARDS --- */
-        [data-testid="stSidebar"] div[role="radiogroup"] > label {
-            background: linear-gradient(145deg, #4169E1, #1D4ED8) !important; /* Premium Royal Blue Gradient */
-            border: 1px solid #1e3a8a !important;
-            border-radius: 10px !important;
-            padding: 8px 14px !important; 
-            margin-bottom: 8px !important; 
-            box-shadow: 0 4px 6px rgba(29, 78, 216, 0.25) !important;
-            transition: all 0.2s ease-in-out !important;
-            width: 100% !important;
-        }
-        
-        [data-testid="stSidebar"] div[role="radiogroup"] > label:hover {
-            background: linear-gradient(145deg, #3B82F6, #2563EB) !important; /* Brighter blue on hover */
-            border-color: #60A5FA !important;
-            transform: scale(0.98) !important; 
-            box-shadow: 0 2px 4px rgba(29, 78, 216, 0.4) !important;
-        }
-
-        [data-testid="stSidebar"] div[role="radiogroup"] p {
-            font-size: 14px !important; 
-            font-weight: 600 !important;
-            color: #ffffff !important; /* White text for high contrast on blue */
-            margin: 0 !important;
-            display: flex !important;
-            align-items: center !important;
-            gap: 8px !important;
-        }
-
-
-
-        /* ── Remove excess top blank space from the main content area ONLY ── */
-        .block-container {
-            padding-top: 1rem !important; 
-        }
-        [data-testid="stHeader"] {
-            height: 0px !important;
-        }
-
-        /* --- 100% MOBILE RESPONSIVENESS (Screens under 768px) --- */
-        @media (max-width: 768px) {
-            /* 1. Prevent completely any horizontal scrolling */
-            body, .stApp {
-                overflow-x: hidden !important;
-            }
-            
-            /* 2. Adjust Block Container padding for small screens */
-            .block-container {
-                padding-left: 1rem !important;
-                padding-right: 1rem !important;
-                padding-top: 2rem !important; /* Keep enough space for the mobile header/toggle */
-                max-width: 100vw !important;
-                overflow-x: hidden !important;
-            }
-
-            /* 3. Scale down Typography */
-            h1, h2, h3 {
-                font-size: 1.5rem !important;
-            }
-
-            /* 4. Fix Contact Page Social Icons (Crucial fix for mobile layout break) */
-            .social-container {
-                gap: 20px !important; /* Reduce massive 50px gap */
-                flex-wrap: wrap !important; /* Allow wrapping if needed */
-            }
-            .social-icon {
-                font-size: 35px !important; /* Scale down massive 50px icons */
-            }
-
-            /* 5. Fix How-It-Works & Other Custom Cards */
-            .how-card {
-                padding: 1rem !important;
-                margin-bottom: 0.8rem !important;
-                width: 100% !important;
-                box-sizing: border-box !important;
-            }
-
-            /* --- 100% MOBILE RESPONSIVENESS FIXES (Screens under 768px) --- */
-            /* 1. Strictly prevent any horizontal scrolling */
-            html, body, [class*="stApp"] {
-                overflow-x: hidden !important;
-                max-width: 100vw !important;
-            }
-            
-            /* 2. Adjust main container padding to maximize screen space */
-            .block-container {
-                padding-left: 1rem !important;
-                padding-right: 1rem !important;
-                padding-top: 2rem !important;
-                max-width: 100vw !important;
-                overflow-x: hidden !important;
-            }
-
-            /* 3. Force all custom inline flex containers to wrap nicely */
-            div[style*="display: flex"] {
-                flex-wrap: wrap !important;
-            }
-
-            /* 4. Scale down typography for mobile */
-            h1 { font-size: 1.8rem !important; }
-            h3 { font-size: 1.3rem !important; }
-
-            /* 5. Fix Static Footer for mobile screens */
-            .static-footer {
-                padding: 25px 10px 15px 10px !important;
-                margin-top: 30px !important;
-            }
-            .footer-socials {
-                gap: 15px !important; /* Reduce gap between icons */
-            }
-            .social-btn {
-                font-size: 22px !important; /* Slightly smaller icons */
-            }
-
-            /* 6. Ensure Map CSS Masks don't push the screen wider */
-            div[style*="position: absolute"] {
-                max-width: 100% !important; 
-            }
-        }
-
-        /* --- HIDE LEAFLET/FOLIUM MAP ATTRIBUTION --- */
-        .leaflet-control-attribution {
-            display: none !important;
-            visibility: hidden !important;
-            opacity: 0 !important;
-        }
-
-    </style>
-
-""", unsafe_allow_html=True)
-
-# --- ULTIMATE CSS TO HIDE STREAMLIT BRANDING BUT KEEP MOBILE MENU ---
-st.markdown("""
-    <style>
-    /* 1. Make header transparent but DO NOT hide it completely, so the mobile menu (☰) stays visible */
+    /* 1. Keep Mobile Menu (Header) visible but transparent */
     [data-testid="stHeader"] {
         background-color: transparent !important;
+        /* No height: 0px here, so the menu icon stays visible! */
     }
 
-    /* 2. Hide only the top-right toolbar (GitHub, Star, Share icons) */
-    [data-testid="stToolbar"] {
+    /* 2. Hide Top Right Icons, MainMenu & Deploy Button */
+    [data-testid="stToolbar"], #MainMenu, .stAppDeployButton, [data-testid="stAppDeployButton"] {
         display: none !important;
         visibility: hidden !important;
     }
 
-    /* 3. Hide the specific Fork/Deploy App button */
-    .stAppDeployButton {
-        display: none !important;
-        visibility: hidden !important;
-    }
-
-    /* 4. Hide the bottom-right Creator Profile Preview (avatar + red badge) */
+    /* 3. Hide the Bottom Right Creator Badge & Status Widget */
     [data-testid="stCreatorProfilePreview"], 
-    div[class*="viewerBadge"] {
+    div[class*="viewerBadge"], 
+    [data-testid="stStatusWidget"], 
+    .stStatusWidget,
+    iframe[title="Streamlit Badge"],
+    iframe[src*="badge"] {
         display: none !important;
         visibility: hidden !important;
         opacity: 0 !important;
     }
 
-    /* 5. Hide the mobile "Hosted with Streamlit" red badge */
-    [data-testid="stStatusWidget"] {
-        display: none !important;
-        visibility: hidden !important;
-    }
-
-    /* 6. Hide the default footer */
+    /* 4. Hide the Default Footer */
     footer {
         display: none !important;
         visibility: hidden !important;
     }
-    
-    /* Adjust padding for a cleaner look */
+
+    /* 5. Clean Padding for the main content */
     .block-container {
-        padding-top: 1rem !important;
+        padding-top: 2rem !important;
         padding-bottom: 0rem !important;
+    }
+    
+    /* --- ROYAL BLUE COMPACT SIDEBAR CARDS (Your Custom Design) --- */
+    [data-testid="stSidebar"] div[role="radiogroup"] > label {
+        background: linear-gradient(145deg, #4169E1, #1D4ED8) !important;
+        border: 1px solid #1e3a8a !important;
+        border-radius: 10px !important;
+        padding: 8px 14px !important; 
+        margin-bottom: 8px !important; 
+        box-shadow: 0 4px 6px rgba(29, 78, 216, 0.25) !important;
+        transition: all 0.2s ease-in-out !important;
+        width: 100% !important;
+    }
+    [data-testid="stSidebar"] div[role="radiogroup"] > label:hover {
+        background: linear-gradient(145deg, #3B82F6, #2563EB) !important;
+        border-color: #60A5FA !important;
+        transform: scale(0.98) !important; 
+        box-shadow: 0 2px 4px rgba(29, 78, 216, 0.4) !important;
+    }
+    [data-testid="stSidebar"] div[role="radiogroup"] p {
+        font-size: 14px !important; 
+        font-weight: 600 !important;
+        color: #ffffff !important;
+        margin: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+    }
+
+    /* --- 100% MOBILE RESPONSIVENESS FIXES (Screens under 768px) --- */
+    @media (max-width: 768px) {
+        html, body, [class*="stApp"] {
+            overflow-x: hidden !important;
+            max-width: 100vw !important;
+        }
+        .block-container {
+            padding-left: 1rem !important;
+            padding-right: 1rem !important;
+            padding-top: 3.5rem !important; /* Proper space for the mobile menu to sit */
+            max-width: 100vw !important;
+            overflow-x: hidden !important;
+        }
+        div[style*="display: flex"] { flex-wrap: wrap !important; }
+        h1 { font-size: 1.8rem !important; }
+        h3 { font-size: 1.3rem !important; }
+        .social-container { gap: 20px !important; flex-wrap: wrap !important; }
+        .social-icon { font-size: 35px !important; }
+        .how-card { padding: 1rem !important; margin-bottom: 0.8rem !important; width: 100% !important; box-sizing: border-box !important; }
+        .static-footer { padding: 25px 10px 15px 10px !important; margin-top: 30px !important; }
+        .footer-socials { gap: 15px !important; }
+        .social-btn { font-size: 22px !important; }
+        div[style*="position: absolute"] { max-width: 100% !important; }
+    }
+
+    /* --- HIDE LEAFLET/FOLIUM MAP ATTRIBUTION --- */
+    .leaflet-control-attribution {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -2541,3 +2381,4 @@ st.markdown("""
     </div>
 </div>
 """, unsafe_allow_html=True)
+
