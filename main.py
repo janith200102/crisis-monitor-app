@@ -60,60 +60,47 @@ def on_page_change():
 # Auto-refresh every 5 minutes (300000 ms)
 st_autorefresh(interval=300000, limit=None, key="global_autorefresh")
 
-# ─────────────────────────────────────────────────────────────
-# CLEAN CSS: HIDE BRANDING, KEEP MENU, FIX KEYBOARD TEXT
-# ─────────────────────────────────────────────────────────────
+# --- 100% WORKING CSS TO HIDE BRANDING BUT KEEP SIDEBAR MENU ---
 st.markdown("""
     <style>
-    /* 1. HIDE TOP RIGHT ICONS & DEPLOY BUTTON */
-    [data-testid="stToolbar"], .stAppDeployButton {
+    /* 1. Make header transparent instead of hiding it, so the mobile menu (☰) remains visible */
+    [data-testid="stHeader"] {
+        background-color: transparent !important;
+    }
+
+    /* 2. Force the sidebar expand/collapse arrow (>) to ALWAYS be visible on desktop and mobile */
+    [data-testid="collapsedControl"], [data-testid="stSidebarCollapsedControl"] {
+        display: flex !important;
+        visibility: visible !important;
+    }
+
+    /* 3. Hide the top-right toolbar icons and the 'Fork'/'Deploy' button */
+    [data-testid="stToolbar"], #MainMenu, .stAppDeployButton {
         display: none !important;
         visibility: hidden !important;
     }
 
-    /* 2. HIDE BOTTOM RIGHT CREATOR BADGE & STATUS WIDGET */
-    #st-creator-badge, 
+    /* 4. Completely hide the bottom-right Creator Profile Preview (avatar) and Streamlit red badge */
     [data-testid="stCreatorProfilePreview"], 
-    [data-testid="stStatusWidget"], 
-    div[class^="viewerBadge"] {
+    [data-testid="stStatusWidget"],
+    .viewerBadge_container__1QSob,
+    div[class*="viewerBadge"] {
         display: none !important;
         visibility: hidden !important;
         opacity: 0 !important;
         pointer-events: none !important;
     }
 
-    /* 3. HIDE FOOTER */
-    footer { display: none !important; }
-
-    /* 4. KEEP HEADER TRANSPARENT (Crucial for Mobile Menu to Work) */
-    [data-testid="stHeader"] { 
-        background: transparent !important; 
-        box-shadow: none !important;
+    /* 5. Hide the default 'Made with Streamlit' footer */
+    footer {
+        display: none !important;
+        visibility: hidden !important;
     }
-
-    /* 5. ROYAL BLUE SIDEBAR CARDS (Your Custom Design) */
-    [data-testid="stSidebar"] div[role="radiogroup"] > label {
-        background: linear-gradient(145deg, #4169E1, #1D4ED8) !important;
-        border: 1px solid #1e3a8a !important;
-        border-radius: 10px !important;
-        padding: 8px 14px !important; 
-        margin-bottom: 8px !important; 
-        box-shadow: 0 4px 6px rgba(29, 78, 216, 0.25) !important;
-        transition: all 0.2s ease-in-out !important;
-        width: 100% !important;
-    }
-    [data-testid="stSidebar"] div[role="radiogroup"] p {
-        color: #ffffff !important;
-        font-weight: 600 !important;
-    }
-
-    /* 6. FIX SPACING FOR MOBILE & DESKTOP */
+    
+    /* 6. Adjust top padding for a cleaner premium look */
     .block-container {
-        padding-top: 3rem !important; 
+        padding-top: 2rem !important;
     }
-
-    /* 7. HIDE MAP ATTRIBUTION */
-    .leaflet-control-attribution { display: none !important; }
     </style>
 """, unsafe_allow_html=True)
 # ─────────────────────────────────────────────────────────────
@@ -2336,5 +2323,6 @@ st.markdown("""
     </div>
 </div>
 """, unsafe_allow_html=True)
+
 
 
