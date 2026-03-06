@@ -60,47 +60,23 @@ def on_page_change():
 # Auto-refresh every 5 minutes (300000 ms)
 st_autorefresh(interval=300000, limit=None, key="global_autorefresh")
 
-# --- 100% WORKING CSS TO HIDE BRANDING BUT KEEP SIDEBAR MENU ---
+# --- MINIMAL CSS FIX (100% WORKING) ---
 st.markdown("""
     <style>
-    /* 1. Make header transparent instead of hiding it, so the mobile menu (☰) remains visible */
-    [data-testid="stHeader"] {
-        background-color: transparent !important;
-    }
+    /* 1. Hide only the top-right icons (GitHub, Star, etc.) and Fork Button */
+    [data-testid="stToolbar"] {visibility: hidden !important;}
+    .stAppDeployButton {display: none !important;}
+    #MainMenu {visibility: hidden !important;}
 
-    /* 2. Force the sidebar expand/collapse arrow (>) to ALWAYS be visible on desktop and mobile */
-    [data-testid="collapsedControl"], [data-testid="stSidebarCollapsedControl"] {
-        display: flex !important;
-        visibility: visible !important;
-    }
-
-    /* 3. Hide the top-right toolbar icons and the 'Fork'/'Deploy' button */
-    [data-testid="stToolbar"], #MainMenu, .stAppDeployButton {
-        display: none !important;
-        visibility: hidden !important;
-    }
-
-    /* 4. Completely hide the bottom-right Creator Profile Preview (avatar) and Streamlit red badge */
-    [data-testid="stCreatorProfilePreview"], 
-    [data-testid="stStatusWidget"],
-    .viewerBadge_container__1QSob,
-    div[class*="viewerBadge"] {
-        display: none !important;
-        visibility: hidden !important;
-        opacity: 0 !important;
-        pointer-events: none !important;
-    }
-
-    /* 5. Hide the default 'Made with Streamlit' footer */
-    footer {
-        display: none !important;
-        visibility: hidden !important;
-    }
+    /* 2. Completely hide the bottom-right Creator Profile (Avatar + Red badge) */
+    [data-testid="stCreatorProfilePreview"] {display: none !important;}
     
-    /* 6. Adjust top padding for a cleaner premium look */
-    .block-container {
-        padding-top: 2rem !important;
-    }
+    /* 3. Completely hide the mobile 'Hosted with Streamlit' badge */
+    [data-testid="stStatusWidget"] {display: none !important;}
+    .viewerBadge_container__1QSob {display: none !important;}
+    
+    /* 4. Hide the default 'Made with Streamlit' footer */
+    footer {display: none !important;}
     </style>
 """, unsafe_allow_html=True)
 # ─────────────────────────────────────────────────────────────
@@ -2323,6 +2299,7 @@ st.markdown("""
     </div>
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
