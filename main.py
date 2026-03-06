@@ -274,44 +274,44 @@ st.markdown("""
 
 """, unsafe_allow_html=True)
 
-# --- ULTIMATE CSS TO HIDE ALL STREAMLIT BRANDING & FORK BUTTON ---
+# --- ULTIMATE CSS TO HIDE STREAMLIT BRANDING BUT KEEP MOBILE MENU ---
 st.markdown("""
     <style>
-    /* 1. Hide the specific Fork/Deploy App button and GitHub icon */
-    .stAppDeployButton {
-        display: none !important;
-        visibility: hidden !important;
-    }
-    
-    /* 2. Hide the entire top header and toolbar */
+    /* 1. Make header transparent but DO NOT hide it completely, so the mobile menu (☰) stays visible */
     [data-testid="stHeader"] {
-        display: none !important;
-        visibility: hidden !important;
+        background-color: transparent !important;
     }
+
+    /* 2. Hide only the top-right toolbar (GitHub, Star, Share icons) */
     [data-testid="stToolbar"] {
         display: none !important;
         visibility: hidden !important;
     }
-    #MainMenu {
+
+    /* 3. Hide the specific Fork/Deploy App button */
+    .stAppDeployButton {
         display: none !important;
         visibility: hidden !important;
     }
 
-    /* 3. Hide the mobile "Hosted with Streamlit" red badge */
+    /* 4. Hide the bottom-right Creator Profile Preview (avatar + red badge) */
+    [data-testid="stCreatorProfilePreview"], 
+    div[class*="viewerBadge"] {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+    }
+
+    /* 5. Hide the mobile "Hosted with Streamlit" red badge */
     [data-testid="stStatusWidget"] {
         display: none !important;
         visibility: hidden !important;
     }
 
-    /* 4. Hide the default footer */
+    /* 6. Hide the default footer */
     footer {
         display: none !important;
         visibility: hidden !important;
-    }
-
-    /* 5. Extra safety for viewer badges */
-    .viewerBadge_container__1QSob {
-        display: none !important;
     }
     
     /* Adjust padding for a cleaner look */
@@ -2310,7 +2310,7 @@ elif page == "📞 Contact Me":
     import base64
 
     _profile_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "profile.jpg")
-    
+    st.write(f"Searching for image at: {_profile_path}")
     if os.path.exists(_profile_path):
         with open(_profile_path, "rb") as _f:
             _profile_b64 = base64.b64encode(_f.read()).decode()
@@ -2541,5 +2541,3 @@ st.markdown("""
     </div>
 </div>
 """, unsafe_allow_html=True)
-
-
