@@ -59,58 +59,82 @@ def on_page_change():
 
 # Auto-refresh every 5 minutes (300000 ms)
 st_autorefresh(interval=300000, limit=None, key="global_autorefresh")
-# --- ULTIMATE UI FIX FOR RENDER (v1.55.0) ---
+# --- FINAL AGGRESSIVE CSS FOR RENDER (v1.55.0) ---
 st.markdown("""
     <style>
-    /* 1. Hide the top-right three dots menu and toolbar completely */
-    #MainMenu, [data-testid="stToolbar"], .stAppDeployButton {
+    /* 1. FORCE HIDE: Three Dots, Share, GitHub, and Manage App button */
+    [data-testid="stHeader"] [data-testid="stToolbar"], 
+    #MainMenu, .stAppDeployButton, [data-testid="stManageApp"] {
         display: none !important;
         visibility: hidden !important;
     }
 
-    /* 2. Fix the "keyboard_double_arrow" text issue by hiding the text and keeping the button functional */
-    [data-testid="collapsedControl"] span, [data-testid="stSidebarCollapsedControl"] span {
-        font-size: 0px !important;
-    }
-    [data-testid="collapsedControl"]::before, [data-testid="stSidebarCollapsedControl"]::before {
-        content: "〉" !important; /* Custom clean arrow icon */
-        font-size: 20px !important;
-        color: #4169E1 !important;
-        font-weight: bold;
+    /* 2. FIX HEADER: Make it invisible but KEEP the height so sidebar buttons work on Mobile */
+    [data-testid="stHeader"] {
+        background-color: transparent !important;
+        color: transparent !important;
     }
 
-    /* 3. Style Sidebar Navigation as Royal Blue Cards */
+    /* 3. FIX SIDEBAR TOGGLE: Kill 'keyboard_double_arrow' text and add a clean icon */
+    [data-testid="collapsedControl"] span, 
+    [data-testid="stSidebarCollapsedControl"] span {
+        display: none !important; /* This kills the annoying text */
+    }
+    [data-testid="collapsedControl"]::before, 
+    [data-testid="stSidebarCollapsedControl"]::before {
+        content: "☰" !important; /* Force a standard menu icon */
+        font-size: 26px !important;
+        color: #4169E1 !important;
+        visibility: visible !important;
+        display: flex !important;
+        padding-left: 10px;
+        cursor: pointer;
+    }
+
+    /* 4. ROYAL BLUE CARDS: Transform sidebar navigation tabs into cards */
     [data-testid="stSidebarNav"] ul {
-        padding-top: 2rem;
+        padding-top: 2rem !important;
     }
     [data-testid="stSidebarNav"] li {
         background-color: #4169E1 !important; /* Royal Blue */
         border-radius: 12px !important;
-        margin: 8px 12px !important;
-        padding: 4px !important;
-        transition: transform 0.2s ease;
-        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        margin: 10px 15px !important;
+        padding: 5px !important;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
     }
     [data-testid="stSidebarNav"] li:hover {
-        transform: scale(1.02);
-        background-color: #2b4eb3 !important; /* Darker Royal Blue on hover */
+        background-color: #2b4eb3 !important; /* Darker Blue on hover */
+        transform: translateY(-2px);
     }
     
-    /* Change text and icon color to White inside cards */
-    [data-testid="stSidebarNav"] li span {
+    /* Change text and icons inside sidebar cards to White */
+    [data-testid="stSidebarNav"] li span, 
+    [data-testid="stSidebarNav"] li i {
         color: white !important;
-        font-weight: 500 !important;
+        font-weight: bold !important;
     }
 
-    /* 4. Hide all Streamlit branding, footers, and badges */
+    /* 5. HIDE FOOTERS & BADGES: Clean background */
     footer {display: none !important;}
     [data-testid="stStatusWidget"], .viewerBadge_container__1QSob {
         display: none !important;
     }
 
-    /* 5. Adjust page padding for a cleaner look */
-    .block-container {
-        padding-top: 1.5rem !important;
+    /* 6. MOBILE OVERRIDE: Ensure Sidebar button is always clickable */
+    @media (max-width: 768px) {
+        [data-testid="stSidebarCollapsedControl"] {
+            background-color: white !important;
+            border-radius: 50% !important;
+            box-shadow: 0px 2px 10px rgba(0,0,0,0.3) !important;
+            width: 45px !important;
+            height: 45px !important;
+            top: 10px !important;
+            left: 10px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
     }
     </style>
 """, unsafe_allow_html=True)
@@ -2334,6 +2358,7 @@ st.markdown("""
     </div>
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
