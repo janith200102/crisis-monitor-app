@@ -2305,12 +2305,15 @@ elif page == "💻 Cyber Threat Monitor":
 # ═════════════════════════════════════════════════════════════
 elif page == "📞 Contact Me":
 
-# ── Load profile image as base64 ──
+    # ── Load profile image as base64 ──
     import os
     import base64
 
     _profile_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "profile.jpg")
-st.write(f"Searching for image at: {_profile_path}")
+    
+    # Test karanna dapu line eka (meka passe aiyn karanna puluwan image eka awama)
+    st.write(f"Searching for image at: {_profile_path}")
+    
     if os.path.exists(_profile_path):
         with open(_profile_path, "rb") as _f:
             _profile_b64 = base64.b64encode(_f.read()).decode()
@@ -2541,3 +2544,4 @@ st.markdown("""
     </div>
 </div>
 """, unsafe_allow_html=True)
+
