@@ -307,14 +307,31 @@ hf_client = None
 HF_IMAGE_MODEL = "umm-maybe/AI-image-detector"
 
 import os
+import streamlit as st
+
+# --- BULLETPROOF API KEY RETRIEVAL ---
+groq_key = None
+hf_token_val = None
+
+# Step 1: Try to get keys from Streamlit secrets (For Localhost)
+try:
+    if "GROQ_API_KEY" in st.secrets:
+        groq_key = st.secrets["GROQ_API_KEY"]
+    if "HUGGINGFACE_API_TOKEN" in st.secrets:
+        hf_token_val = st.secrets["HUGGINGFACE_API_TOKEN"]
+except Exception:
+    # Ignore the StreamlitSecretNotFoundError if the file is completely missing in production
+    pass
+
+# Step 2: Fallback to OS Environment Variables (For Render/Cloud)
+if not groq_key:
+    groq_key = os.environ.get("GROQ_API_KEY")
+if not hf_token_val:
+    hf_token_val = os.environ.get("HUGGINGFACE_API_TOKEN")
 
 # ── Groq (for text analysis) ──
 if GROQ_AVAILABLE:
-    if "GROQ_API_KEY" in st.secrets:
-        groq_api_key = st.secrets["GROQ_API_KEY"]
-    else:
-        groq_api_key = os.environ.get("GROQ_API_KEY", "")
-        
+    groq_api_key = groq_key
     if isinstance(groq_api_key, str):
         groq_api_key = groq_api_key.strip()
         
@@ -327,11 +344,7 @@ if GROQ_AVAILABLE:
 
 # ── Hugging Face (for image analysis) ──
 if HF_AVAILABLE:
-    if "HUGGINGFACE_API_TOKEN" in st.secrets:
-        hf_token = st.secrets["HUGGINGFACE_API_TOKEN"]
-    else:
-        hf_token = os.environ.get("HUGGINGFACE_API_TOKEN", "")
-        
+    hf_token = hf_token_val
     if isinstance(hf_token, str):
         hf_token = hf_token.strip()
         
