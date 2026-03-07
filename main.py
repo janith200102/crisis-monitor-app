@@ -306,18 +306,18 @@ HF_READY = False
 hf_client = None
 HF_IMAGE_MODEL = "umm-maybe/AI-image-detector"
 
+import os
+
 # ── Groq (for text analysis) ──
 if GROQ_AVAILABLE:
-    groq_api_key = ""
-    try:
+    if "GROQ_API_KEY" in st.secrets:
         groq_api_key = st.secrets["GROQ_API_KEY"]
-    except (KeyError, FileNotFoundError):
-        try:
-            groq_api_key = st.secrets.get("GROQ_API_KEY", "")
-        except Exception:
-            groq_api_key = ""
+    else:
+        groq_api_key = os.environ.get("GROQ_API_KEY", "")
+        
     if isinstance(groq_api_key, str):
         groq_api_key = groq_api_key.strip()
+        
     if groq_api_key:
         try:
             groq_client = Groq(api_key=groq_api_key)
@@ -327,16 +327,14 @@ if GROQ_AVAILABLE:
 
 # ── Hugging Face (for image analysis) ──
 if HF_AVAILABLE:
-    hf_token = ""
-    try:
+    if "HUGGINGFACE_API_TOKEN" in st.secrets:
         hf_token = st.secrets["HUGGINGFACE_API_TOKEN"]
-    except (KeyError, FileNotFoundError):
-        try:
-            hf_token = st.secrets.get("HUGGINGFACE_API_TOKEN", "")
-        except Exception:
-            hf_token = ""
+    else:
+        hf_token = os.environ.get("HUGGINGFACE_API_TOKEN", "")
+        
     if isinstance(hf_token, str):
         hf_token = hf_token.strip()
+        
     if hf_token:
         try:
             hf_client = InferenceClient(token=hf_token)
