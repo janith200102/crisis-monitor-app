@@ -57,11 +57,15 @@ if "current_page" not in st.session_state:
 def on_page_change():
     st.session_state.current_page = st.session_state.nav_radio
 
-from datetime import datetime
-current_time = datetime.now().strftime("%H:%M:%S")
+from datetime import datetime, timezone, timedelta
+
+# --- 100% WORKING TIME (SRI LANKA STANDARD TIME) ---
+sl_timezone = timezone(timedelta(hours=5, minutes=30))
+current_time = datetime.now(sl_timezone).strftime("%H:%M:%S")
+
 st.markdown(f"""
     <div style="position: absolute; top: 15px; right: 15px; font-family: 'Poppins', sans-serif; font-size: 12px; color: #64748B; background: rgba(255, 255, 255, 0.9); padding: 6px 15px; border-radius: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); z-index: 9999; font-weight: 500;">
-        Last refresh: {current_time}
+        Last refresh: {current_time} <span style="font-size: 10px; font-weight: 700; color: #4169E1;">(SLST)</span>
     </div>
 """, unsafe_allow_html=True)
 
