@@ -48,7 +48,7 @@ st.set_page_config(
     page_title="Crisis Monitor Dashboard | Think With Jk",
     page_icon="🌐",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="collapsed",
 )
 
 if "current_page" not in st.session_state:
@@ -57,69 +57,240 @@ if "current_page" not in st.session_state:
 def on_page_change():
     st.session_state.current_page = st.session_state.nav_radio
 
+from datetime import datetime
+current_time = datetime.now().strftime("%H:%M:%S")
+st.markdown(f"""
+    <div style="position: absolute; top: 15px; right: 15px; font-family: 'Poppins', sans-serif; font-size: 12px; color: #64748B; background: rgba(255, 255, 255, 0.9); padding: 6px 15px; border-radius: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); z-index: 9999; font-weight: 500;">
+        Last refresh: {current_time}
+    </div>
+""", unsafe_allow_html=True)
+
 # Auto-refresh every 5 minutes (300000 ms)
 st_autorefresh(interval=300000, limit=None, key="global_autorefresh")
-# --- THE ULTIMATE AGGRESSIVE UI FIX (STRICTLY FOR RENDER) ---
+# --- ULTIMATE CSS: ROYAL BLUE NAVBAR & NO STREAMLIT BRANDING ---
 st.markdown("""
     <style>
-    /* 1. HIDE ALL TOP TOOLS: Dots, Fork, and Toolbar */
-    #MainMenu, [data-testid="stToolbar"], .stAppDeployButton {
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+    /* 1. Completely hide the Sidebar and its toggle controls */
+    [data-testid="stSidebar"], [data-testid="collapsedControl"], [data-testid="stSidebarCollapsedControl"] {
+        display: none !important;
+        visibility: hidden !important;
+        width: 0px !important;
+    }
+
+    /* 2. Completely hide the entire Streamlit Header, Toolbar, Deploy button, and 3-dots menu */
+    [data-testid="stHeader"], [data-testid="stToolbar"], .stAppDeployButton, #MainMenu {
         display: none !important;
         visibility: hidden !important;
     }
 
-    /* 2. FIX SIDEBAR ARROW: Kill 'keyboard_double_arrow' text and force clean icon */
-    [data-testid="collapsedControl"] span, 
-    [data-testid="stSidebarCollapsedControl"] span {
-        display: none !important; /* Forcefully hides the text */
-    }
-    [data-testid="collapsedControl"]::before, 
-    [data-testid="stSidebarCollapsedControl"]::before {
-        content: "〉" !important; /* Injects a clean arrow symbol */
-        font-size: 24px !important;
-        color: #4169E1 !important;
-        font-weight: bold !important;
-        display: flex !important;
-        align-items: center;
-        justify-content: center;
+    /* 3. Completely hide bottom badges (Status, Creator Profile, Made with Streamlit) */
+    [data-testid="stCreatorProfilePreview"], [data-testid="stStatusWidget"], .viewerBadge_container__1QSob, footer, iframe[src*="badge"] {
+        display: none !important;
+        visibility: hidden !important;
     }
 
-    /* 3. ROYAL BLUE CARDS: Transform sidebar items into premium cards */
-    [data-testid="stSidebarNav"] li {
+    /* 4. STYLE THE HORIZONTAL RADIO AS A ROYAL BLUE NAVBAR */
+    div[role="radiogroup"] {
         background-color: #4169E1 !important; /* Royal Blue */
-        border-radius: 15px !important;
-        margin: 12px 18px !important;
-        padding: 10px !important;
-        box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.25) !important;
-        transition: all 0.3s ease-in-out !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    }
-    [data-testid="stSidebarNav"] li:hover {
-        background-color: #2b4eb3 !important;
-        transform: translateY(-3px) scale(1.02) !important;
+        padding: 6px 15px !important;
+        border-radius: 8px !important;
+        display: flex !important;
+        justify-content: center !important;
+        flex-wrap: nowrap !important; /* Force to fit on a single line */
+        gap: 10px !important;
+        margin-bottom: 20px !important;
+        box-shadow: 0px 4px 6px rgba(0,0,0,0.1);
+        overflow-x: auto !important; /* Add scroll if viewport is too small */
     }
     
-    /* Change text and icons inside cards to White and Bold */
-    [data-testid="stSidebarNav"] li span {
-        color: white !important;
-        font-weight: 800 !important;
-        font-size: 15px !important;
-    }
-
-    /* 4. FORCE MOBILE VISIBILITY: Ensure the button stays on top */
-    [data-testid="stSidebarCollapsedControl"] {
-        z-index: 999999 !important;
-        top: 15px !important;
-        left: 15px !important;
-    }
-
-    /* 5. CLEANUP: Hide footer and Streamlit status widgets */
-    footer {display: none !important;}
-    [data-testid="stStatusWidget"], .viewerBadge_container__1QSob {
+    /* 1. Hide the default radio circles completely */
+    div[role="radiogroup"] label > div:first-child {
         display: none !important;
+    }
+
+    /* 2. FORCE TEXT TO BE STRICTLY WHITE */
+    div[role="radiogroup"] label,
+    div[role="radiogroup"] label p {
+        color: #FFFFFF !important;
+        font-family: 'Poppins', sans-serif !important;
+        font-weight: 500 !important;
+        font-size: 15px !important;
+        margin-bottom: 0px !important;
+    }
+
+    /* 3. Base layout for the tabs */
+    div[role="radiogroup"] label {
+        padding: 8px 18px !important;
+        margin: 0 4px !important;
+        border-radius: 8px !important;
+        cursor: pointer !important;
+        background-color: transparent !important;
+        transition: all 0.3s ease !important;
+        border: 1px solid transparent !important;
+    }
+
+    /* 4. Hover effect */
+    div[role="radiogroup"] label:hover {
+        background-color: rgba(255, 255, 255, 0.1) !important;
+    }
+
+    /* 5. HIGHLIGHT THE CLICKED/ACTIVE TAB */
+    div[role="radiogroup"] label:has(input:checked) {
+        background-color: rgba(255, 255, 255, 0.25) !important; /* Premium semi-transparent white highlight */
+        border: 1px solid rgba(255, 255, 255, 0.5) !important;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.15) !important;
+    }
+    
+    /* Make active tab text bolder */
+    div[role="radiogroup"] label:has(input:checked) p {
+        font-weight: 700 !important;
+        color: #FFFFFF !important;
+        text-shadow: 0px 0px 8px rgba(255,255,255,0.4) !important;
+    }
+
+    /* Adjust page top padding */
+    .block-container {
+        padding-top: 2rem !important;
     }
     </style>
 """, unsafe_allow_html=True)
+
+# --- PREMIUM ANIMATED HEADER ---
+st.markdown("""
+    <style>
+    /* Import premium font for the main title */
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap');
+    
+    /* Animated Shine Effect for 'Crisis Monitor' */
+    .premium-title {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 3.5rem;
+        font-weight: 900;
+        background: linear-gradient(to right, #1E293B 0%, #4169E1 50%, #1E293B 100%);
+        background-size: 200% auto;
+        color: transparent;
+        -webkit-background-clip: text;
+        background-clip: text;
+        animation: textShine 3s linear infinite;
+        margin-bottom: -5px;
+        letter-spacing: 1px;
+        line-height: 1.2;
+    }
+    
+    /* Glowing Pulse Effect for 'REAL-TIME INTELLIGENCE' */
+    .premium-subtitle {
+        font-family: 'Courier New', monospace;
+        font-size: 1.1rem;
+        color: #4169E1;
+        letter-spacing: 8px;
+        font-weight: 800;
+        margin-top: 0px;
+        text-transform: uppercase;
+        animation: textPulse 2s infinite;
+    }
+    
+    @keyframes textShine {
+        to { background-position: 200% center; }
+    }
+    
+    @keyframes textPulse {
+        0% { opacity: 0.7; text-shadow: 0 0 5px rgba(65,105,225,0.2); }
+        50% { opacity: 1; text-shadow: 0 0 15px rgba(65,105,225,0.6); }
+        100% { opacity: 0.7; text-shadow: 0 0 5px rgba(65,105,225,0.2); }
+    }
+    </style>
+    
+    <div style="text-align: center; margin-bottom: 25px; margin-top: -20px; animation: fadeIn 1.5s;">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/2/2c/Rotating_earth_%28large%29.gif" width="95" style="border-radius: 50%; box-shadow: 0 8px 25px rgba(65, 105, 225, 0.6); margin-bottom: 10px;">
+        <div class="premium-title">Crisis Monitor</div>
+        <div class="premium-subtitle">REAL-TIME INTELLIGENCE</div>
+    </div>
+""", unsafe_allow_html=True)
+
+# --- MOBILE RESPONSIVENESS (SMOOTH & BALANCED) ---
+st.markdown("""
+    <style>
+    /* Target mobile devices and small screens (max-width: 768px) */
+    @media (max-width: 768px) {
+        /* 1. Scale down the Animated Header */
+        .premium-title {
+            font-size: 2.2rem !important; /* Smaller title */
+            margin-bottom: 5px !important;
+        }
+        .premium-subtitle {
+            font-size: 0.85rem !important; /* Smaller subtitle */
+            letter-spacing: 4px !important;
+        }
+        img[src*="Rotating_earth"] {
+            width: 70px !important; /* Smaller globe */
+            margin-bottom: 5px !important;
+        }
+        
+        /* 2. Optimize the Horizontal Navigation Bar for Touch */
+        div[role="radiogroup"] {
+            gap: 6px !important;
+            padding: 5px !important;
+            flex-wrap: wrap !important; /* Allow buttons to wrap nicely */
+        }
+        div[role="radiogroup"] label {
+            font-size: 13px !important; /* Smaller text */
+            padding: 6px 12px !important;
+            flex: 1 1 auto !important; /* Make buttons flex to fill space smoothly */
+            justify-content: center !important;
+        }
+        
+        /* 3. Maximize Screen Space (Reduce blank paddings) */
+        .block-container {
+            padding-top: 1rem !important;
+            padding-left: 1rem !important;
+            padding-right: 1rem !important;
+        }
+
+        /* 4. Adjust the Shimmer Footer */
+        .shimmer-text {
+            font-size: 11px !important;
+            letter-spacing: 3px !important;
+            margin-top: 40px !important;
+        }
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+# ─────────────────────────────────────────────────────────────
+# TOP NAVIGATION (Horizontal)
+# ─────────────────────────────────────────────────────────────
+page = st.radio(
+    "Navigation",
+    ["📰 Live News", "📈 Live Economic Impact", "🕵️ AI Fact & Deepfake Checker", "🌍 Live Disaster Map", "💻 Cyber Threat Monitor", "📞 Contact Me"],
+    horizontal=True,
+    label_visibility="collapsed",
+    key="nav_radio",
+    on_change=on_page_change
+)
+
+import streamlit.components.v1 as components
+
+# --- 100% BULLETPROOF SCROLL TO TOP ON EVERY PAGE CHANGE ---
+components.html(
+    f"""
+    <script>
+        // Target the main scrolling containers in Streamlit
+        var parentWindow = window.parent;
+        var mainContainer = parentWindow.document.querySelector('.main') || parentWindow.document.querySelector('[data-testid="stMain"]');
+        
+        if (mainContainer) {{
+            mainContainer.scrollTo({{top: 0, behavior: 'instant'}});
+            mainContainer.scrollTop = 0;
+        }}
+        parentWindow.scrollTo({{top: 0, behavior: 'instant'}});
+    </script>
+    <!-- {page} -->
+    """,
+    height=0,
+    width=0
+)
 # ─────────────────────────────────────────────────────────────
 # GROQ + HUGGING FACE SETUP
 # ─────────────────────────────────────────────────────────────
@@ -169,174 +340,7 @@ if HF_AVAILABLE:
         except Exception:
             HF_READY = False
 
-# ─────────────────────────────────────────────────────────────
-# LIGHT THEME CSS
-# ─────────────────────────────────────────────────────────────
-st.markdown("""
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
 
-    /* Sidebar Background & Fonts */
-    [data-testid="stSidebar"] {
-        background: linear-gradient(135deg, #fdfbfb 0%, #e2ebf0 100%) !important;
-    }
-    [data-testid="stSidebar"] * {
-        font-family: 'Poppins', 'Inter', sans-serif !important;
-    }
-
-    /* 1. Modern Typography & Emoji Enhancement for Menu Items */
-    [data-testid="stSidebar"] div[role="radiogroup"] p {
-        font-family: 'Poppins', 'Inter', sans-serif !important;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-        text-shadow: 0px 1px 2px rgba(0,0,0,0.05) !important; /* Makes emojis pop */
-    }
-    
-    /* 2. Smooth Hover Animation (Slide Right) */
-    [data-testid="stSidebar"] div[role="radiogroup"] label:hover p {
-        color: #111111 !important;
-        transform: translateX(8px) !important;
-    }
-
-    /* 4. Active/Selected State - Bold Text & Color */
-    [data-testid="stSidebar"] div[role="radiogroup"] label[data-checked="true"] p {
-        color: #ff4b4b !important; /* Vibrant brand color */
-        font-weight: 700 !important;
-        transform: translateX(5px) !important;
-    }
-    
-    /* 5. Active/Selected State - Glowing Dot Animation */
-    [data-testid="stSidebar"] div[role="radiogroup"] label[data-checked="true"] [data-baseweb="radio"] > div {
-        box-shadow: 0 0 12px rgba(255, 75, 75, 0.6) !important; /* Red Glow */
-        transform: scale(1.2) !important; /* Enlarge the dot */
-        border-color: #ff4b4b !important;
-    }
-
-    /* Rotating Globe Styling */
-    .globe-container {
-        text-align: center;
-        padding: 1.2rem 0 0.8rem;
-    }
-    .globe-img {
-        width: 120px !important;
-        max-width: 120px !important;
-        height: 120px !important;
-        border-radius: 50%;
-        object-fit: cover;
-        box-shadow: 
-            0 0 15px rgba(59,130,246,0.35), 
-            0 0 30px rgba(99,102,241,0.2), 
-            0 0 60px rgba(59,130,246,0.1);
-        border: 2px solid rgba(99,102,241,0.15);
-        margin: 0 auto;
-        display: block;
-    }
-
-    /* Globe Titles */
-    .sidebar-title {
-        font-size: 1.15rem;
-        font-weight: 800;
-        color: #1A1D23;
-        letter-spacing: 1px;
-        margin-top: 0.7rem;
-        text-align: center;
-    }
-    .sidebar-subtitle {
-        font-family: 'Inter', sans-serif !important;
-        font-size: 0.68rem;
-        color: #7A8299;
-        text-transform: uppercase;
-        letter-spacing: 2.5px;
-        margin-top: 4px;
-        text-align: center;
-    }
-
-    /* Silver Shimmer Branding */
-    .shimmer-branding {
-        text-align: center;
-        padding: 0.8rem 0 1rem;
-    }
-    .shimmer-divider {
-        width: 60%;
-        height: 1px;
-        margin: 0.4rem auto 0.5rem;
-        background: linear-gradient(90deg, transparent, rgba(99,102,241,0.3), transparent);
-    }
-    .shimmer-text {
-        font-weight: 800;
-        font-size: 0.75rem;
-        letter-spacing: 3px;
-        text-transform: uppercase;
-        background: linear-gradient(90deg, #7a7a7a 0%, #e8e8e8 50%, #7a7a7a 100%);
-        background-size: 200% auto;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        animation: shine 3s linear infinite;
-    }
-    @keyframes shine {
-        to { background-position: 200% center; }
-    }
-</style>
-""", unsafe_allow_html=True)
-
-# ─────────────────────────────────────────────────────────────
-# SIDEBAR NAVIGATION — 3 PAGES
-# ─────────────────────────────────────────────────────────────
-with st.sidebar:
-    # ── Animated Rotating Globe + Silver Shimmer Branding ──
-    st.markdown("""
-    <div class="globe-container">
-        <img class="globe-img"
-             src="https://upload.wikimedia.org/wikipedia/commons/2/2c/Rotating_earth_%28large%29.gif"
-             alt="Rotating Earth" />
-        <div class="sidebar-title">Crisis Monitor</div>
-        <div class="sidebar-subtitle">Real-Time Intelligence</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-    page = st.radio(
-        "Navigate",
-        ["📰 Live News", "📈 Live Economic Impact", "🕵️ AI Fact & Deepfake Checker", "🌍 Live Disaster Map", "💻 Cyber Threat Monitor", "📞 Contact Me"],
-        key="nav_radio",
-        on_change=on_page_change,
-        label_visibility="collapsed"
-    )
-
-    import streamlit.components.v1 as components
-
-    # --- 100% BULLETPROOF SCROLL TO TOP ON EVERY PAGE CHANGE ---
-    components.html(
-        f"""
-        <script>
-            // Target the main scrolling containers in Streamlit
-            var parentWindow = window.parent;
-            var mainContainer = parentWindow.document.querySelector('.main') || parentWindow.document.querySelector('[data-testid="stMain"]');
-            
-            if (mainContainer) {{
-                mainContainer.scrollTo({{top: 0, behavior: 'instant'}});
-                mainContainer.scrollTop = 0;
-            }}
-            parentWindow.scrollTo({{top: 0, behavior: 'instant'}});
-        </script>
-        <!-- {page} -->
-        """,
-        height=0,
-        width=0
-    )
-
-    st.markdown("---")
-    st.markdown(f"""
-    <div style="font-family: 'Inter', sans-serif; font-size: 0.72rem; color: #A0A8BD;
-                text-align: center; padding: 0.5rem 0;">
-        Last refresh: {datetime.now().strftime("%H:%M:%S")}
-    </div>
-    """, unsafe_allow_html=True)
-
-    st.markdown("""
-    <div class="shimmer-branding">
-        <div class="shimmer-divider"></div>
-        <div class="shimmer-text">POWERED BY THINK WITH JK</div>
-    </div>
-    """, unsafe_allow_html=True)
 
 
 # ─────────────────────────────────────────────────────────────
@@ -570,15 +574,18 @@ def fetch_cyber_news():
     """Fetch live cyber threat news from RSS feeds concurrently."""
     feeds = [
         ("The Hacker News", "https://feeds.feedburner.com/TheHackersNews"),
-        ("Bleeping Computer", "https://www.bleepingcomputer.com/feed/"),
+        ("CISA Advisories", "https://www.cisa.gov/cybersecurity-advisories/all.xml"),
+        ("Krebs on Security", "https://krebsonsecurity.com/feed/"),
+        ("Dark Reading", "https://www.darkreading.com/rss.xml"),
     ]
-    cutoff = datetime.now(timezone.utc) - timedelta(hours=48)
+    cutoff = datetime.now(timezone.utc) - timedelta(days=7)
 
     def _fetch_single_feed(source_name, url):
         results = []
         try:
-            # Force a 5-second timeout on the network request
-            response = requests.get(url, timeout=5)
+            # Force a 5-second timeout on the network request and use User-Agent to bypass 403 Forbidden blocks
+            headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}
+            response = requests.get(url, headers=headers, timeout=5)
             response.raise_for_status()
             feed = feedparser.parse(response.content)
             for entry in feed.entries[:10]:
@@ -2109,7 +2116,6 @@ elif page == "📞 Contact Me":
     import base64
 
     _profile_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "profile.jpg")
-    st.write(f"Searching for image at: {_profile_path}")
     if os.path.exists(_profile_path):
         with open(_profile_path, "rb") as _f:
             _profile_b64 = base64.b64encode(_f.read()).decode()
@@ -2339,8 +2345,41 @@ st.markdown("""
         <a href="https://wa.me/94704868562" target="_blank" class="social-btn wa" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
     </div>
 </div>
-""", unsafe_allow_html=True)
 
+<style>
+/* Premium Animated Footer CSS */
+.shimmer-branding-footer {
+    text-align: center;
+    padding: 2rem 0 1.5rem;
+    margin-top: 2rem;
+}
+.shimmer-divider-footer {
+    width: 250px;
+    height: 1px;
+    margin: 0 auto 0.8rem;
+    background: linear-gradient(90deg, transparent, rgba(65, 105, 225, 0.5), transparent);
+}
+.shimmer-text-footer {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: 0.85rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    background: linear-gradient(90deg, #7a7a7a 0%, #4169E1 50%, #7a7a7a 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shine-footer 3s linear infinite;
+}
+@keyframes shine-footer {
+    to { background-position: 200% center; }
+}
+</style>
+<div class="shimmer-branding-footer">
+    <div class="shimmer-divider-footer"></div>
+    <div class="shimmer-text-footer">POWERED BY THINK WITH JK</div>
+</div>
+""", unsafe_allow_html=True)
 
 
 
